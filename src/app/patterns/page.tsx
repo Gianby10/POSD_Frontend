@@ -1,17 +1,20 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import PatternsList from "./_components/PatternsList";
 import React from "react";
 
 type Props = {};
 
 const PatternsPage = (props: Props) => {
   return (
-    <section className="py-14 bg-slate-100">
+    <section className="py-14">
       <MaxWidthWrapper>
-        <div>
+        <div className="">
           <h3 className="tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-gray-900">
             Patterns
           </h3>
         </div>
+
+        <PatternsList />
       </MaxWidthWrapper>
       ;
     </section>

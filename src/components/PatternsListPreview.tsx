@@ -1,11 +1,12 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import Pattern, { PatternSkeleton } from "./Pattern";
+import Pattern, { PatternSkeleton } from "./PatternPreview";
 import axios from "axios";
 import { PrivacyPattern } from "@/lib/types";
 import { Button } from "./ui/button";
+import PatternPreview from "./PatternPreview";
 
-const PatternsList = () => {
+const PatternsListPreview = () => {
   const [patterns, setPatterns] = useState<
     {
       id: number;
@@ -49,9 +50,9 @@ const PatternsList = () => {
           return <PatternSkeleton key={i} />;
         })}
       {!isLoading &&
-        patterns.map(({ id, attributes }) => {
+        patterns.slice(0, 6).map(({ id, attributes }) => {
           return (
-            <Pattern
+            <PatternPreview
               titolo={attributes.titolo}
               descrizione={attributes.descrizione}
               id={id}
@@ -79,4 +80,4 @@ const PatternsList = () => {
   );
 };
 
-export default PatternsList;
+export default PatternsListPreview;

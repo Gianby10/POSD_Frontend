@@ -69,6 +69,12 @@ export async function loginUserAction(values: z.infer<typeof formLoginSchema>) {
 
   if (responseData.error) {
     console.log(responseData.error);
+    if (responseData.error.name === "ValidationError") {
+      return {
+        error: "Email o password non valide.",
+        zodErrors: null,
+      };
+    }
     return {
       error: "Ops! Qualcosa è andato storto. Riprova più tardi.",
       zodErrors: null,

@@ -1,9 +1,8 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import PatternsList from "@/components/PatternsList";
+import PatternsListPreview from "@/components/PatternsListPreview";
 
-import { Check, ChevronsRight, Loader2 } from "lucide-react";
+import { ChevronsRight } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
 
 export default async function Home() {
   return (
@@ -45,9 +44,9 @@ export default async function Home() {
                 <ChevronsRight className="inline-block" />
               </Link>
             </div>
-
-            <PatternsList />
           </div>
+
+          <PatternsListPreview />
         </MaxWidthWrapper>
       </section>
     </div>

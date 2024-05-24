@@ -21,11 +21,18 @@ type Props = {
   descrizione: string;
   id: number;
   articoliGdpr?: { attributes: { nome: string; numero: number } }[];
+  className?: string;
 };
 
-const Pattern = ({ titolo, descrizione, id, articoliGdpr }: Props) => {
+const PatternPreview = ({
+  titolo,
+  descrizione,
+  id,
+  articoliGdpr,
+  className,
+}: Props) => {
   return (
-    <div>
+    <div className={className}>
       <Link href={`/patterns/${id}`} className="group">
         <Card className="shadow-xl h-full flex flex-col justify-between group-hover:bg-slate-100 group-hover:-translate-y-2 transition-all">
           <div className="p-6 flex flex-col gap-2">
@@ -67,7 +74,7 @@ const Pattern = ({ titolo, descrizione, id, articoliGdpr }: Props) => {
   );
 };
 
-export default Pattern;
+export default PatternPreview;
 
 export const PatternSkeleton = () => {
   return (
