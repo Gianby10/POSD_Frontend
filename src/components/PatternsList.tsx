@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Pattern, { PatternSkeleton } from "./Pattern";
 import axios from "axios";
 import { PrivacyPattern } from "@/lib/types";
-import { Button, buttonVariants } from "./ui/button";
-import Link from "next/link";
+import { Button } from "./ui/button";
 
 const PatternsList = () => {
   const [patterns, setPatterns] = useState<
@@ -18,23 +17,35 @@ const PatternsList = () => {
     }[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data: patterns } = await axios.get(
-        "http://127.0.0.1:4444/api/privacy-patterns?populate[0]=gdpr_article"
-      );
+  const [error, setError] = useState(false);
 
-      setPatterns(patterns.data);
+  const getPatterns = useCallback(() => {
+    const fetchData = async () => {
+      try {
+        const { data: patterns, status } = await axios.get(
+          `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/privacy-patterns?populate[0]=gdpr_article`
+        );
+
+        setPatterns(patterns.data);
+      } catch (error) {
+        setError(true);
+      } finally {
+        setIsLoading(false);
+      }
     };
     setIsLoading(true);
     fetchData();
     setIsLoading(false);
   }, []);
 
+  useEffect(() => {
+    getPatterns();
+  }, [error]);
+
   return (
     <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-[1fr] gap-4 mt-auto">
       {isLoading &&
-        new Array(5).fill(1).map((_, i) => {
+        new Array(6).fill(1).map((_, i) => {
           return <PatternSkeleton key={i} />;
         })}
       {!isLoading &&
@@ -49,6 +60,21 @@ const PatternsList = () => {
             />
           );
         })}
+      {!isLoading && error && (
+        <div className="flex justify-center col-span-full">
+          <div className="border-red-300 border p-2 rounded-lg bg-red-200 flex flex-col justify-center">
+            <p>Errore nel caricamento dei pattern</p>
+            <Button
+              onClick={() => {
+                setError(false);
+              }}
+              variant={"ghost"}
+            >
+              Riprova
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

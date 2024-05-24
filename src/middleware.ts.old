@@ -1,0 +1,12 @@
+// import { NextRequest } from "next/server";
+// import { getUserMeLoader } from "./lib/auth";
+
+// export const middleware = async (req: NextRequest) => {
+//   const user = await getUserMeLoader();
+//   const currentPath = req.nextUrl.pathname;
+
+//   console.log("---MIDDLEWARE---");
+//   console.log(user);
+//   console.log(currentPath);
+//   console.log("---MIDDLEWARE---");
+// };
