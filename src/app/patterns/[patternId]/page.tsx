@@ -1,6 +1,6 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import axios from "axios";
-import React, { useCallback } from "react";
+import React from "react";
 import qs from "qs";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Info, Ribbon } from "lucide-react";
@@ -93,7 +93,7 @@ const PatternIdPage = async ({ params }: Props) => {
                     };
                   }) => {
                     return (
-                      <div>
+                      <div key={articolo.attributes.nome}>
                         <Link
                           href={articolo.attributes.link}
                           className="text-primary hover:underline"
@@ -122,7 +122,11 @@ const PatternIdPage = async ({ params }: Props) => {
                     attributes: { nome: string; descrizione: string };
                   }) => {
                     return (
-                      <Accordion type="single" collapsible>
+                      <Accordion
+                        key={strategy.attributes.nome}
+                        type="single"
+                        collapsible
+                      >
                         <AccordionItem value="item-1">
                           <AccordionTrigger>
                             {strategy.attributes.nome}
@@ -144,17 +148,21 @@ const PatternIdPage = async ({ params }: Props) => {
             <div className="space-y-4">
               {patternData.privacyPrinciples.length > 0 ? (
                 patternData.privacyPrinciples.map(
-                  (strategy: {
+                  (principle: {
                     attributes: { titolo: string; descrizione: string };
                   }) => {
                     return (
-                      <Accordion type="single" collapsible>
+                      <Accordion
+                        key={principle.attributes.titolo}
+                        type="single"
+                        collapsible
+                      >
                         <AccordionItem value="item-1">
                           <AccordionTrigger>
-                            {strategy.attributes.titolo}
+                            {principle.attributes.titolo}
                           </AccordionTrigger>
                           <AccordionContent>
-                            {strategy.attributes.descrizione}
+                            {principle.attributes.descrizione}
                           </AccordionContent>
                         </AccordionItem>
                       </Accordion>
@@ -178,7 +186,11 @@ const PatternIdPage = async ({ params }: Props) => {
                     };
                   }) => {
                     return (
-                      <Accordion type="single" collapsible>
+                      <Accordion
+                        key={cweWeakness.attributes.nome}
+                        type="single"
+                        collapsible
+                      >
                         <AccordionItem value="item-1">
                           <AccordionTrigger>
                             CWE-{cweWeakness.attributes.numero}:{" "}

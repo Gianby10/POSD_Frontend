@@ -18,7 +18,7 @@ const PatternsList = () => {
     title: "",
   });
   const [debouncedSearchTerm] = useDebounce(filters.title, 500);
-  console.log(debouncedSearchTerm);
+
   const query = qs.stringify(
     {
       populate: "*",
@@ -55,7 +55,7 @@ const PatternsList = () => {
 
   return (
     <div className="pt-6 grid grid-cols-1 lg:grid-cols-4 lg:auto-rows-[1fr] gap-4 mt-auto">
-      <div className="md:h-full w-full border-r-gray-200 lg:border-r-2 p-6">
+      <div className="md:h-full w-full border-gray-200 border-b-2 lg:border-r-2 p-6">
         <h3 className="font-bold text-xl">Filtri di ricerca</h3>
         <div className="flex flex-col gap-1 mt-8">
           <p>Cerca un pattern per titolo: </p>

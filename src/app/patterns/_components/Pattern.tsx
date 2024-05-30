@@ -14,7 +14,10 @@ type Props = {
   titolo: string;
   descrizione: string;
   id: number;
-  articoliGdpr?: { attributes: { nome: string; numero: number } }[];
+  articoliGdpr?: {
+    id: number;
+    attributes: { nome: string; numero: number; link: string };
+  }[];
   className?: string;
 };
 

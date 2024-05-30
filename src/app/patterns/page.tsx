@@ -1,10 +1,9 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PatternsList from "./_components/PatternsList";
-import React from "react";
 
 type Props = {};
 
-const PatternsPage = (props: Props) => {
+const PatternsPage = async (props: Props) => {
   return (
     <section className="py-14">
       <MaxWidthWrapper>

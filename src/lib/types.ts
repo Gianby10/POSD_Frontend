@@ -1,17 +1,52 @@
 import { z } from "zod";
 
+// export type PrivacyPattern = {
+//   titolo: string;
+//   descrizione: string;
+//   privacyStrategy: PrivacyStrategy | PrivacyStrategy[];
+//   contesto: string;
+//   collocazioneMVC: string;
+//   gdprArticle?: GDPRArticle | GDPRArticle[];
+//   privacyPrinciple: PrivacyPrinciple | PrivacyPrinciple[];
+//   problema: string;
+//   soluzione: string;
+//   esempio: string;
+//   cweWeakness?: CWEWeakness | CWEWeakness[];
+// };
+
 export type PrivacyPattern = {
-  titolo: string;
-  descrizione: string;
-  privacyStrategy: PrivacyStrategy | PrivacyStrategy[];
-  contesto: string;
-  collocazioneMVC: string;
-  gdprArticle?: GDPRArticle | GDPRArticle[];
-  privacyPrinciple: PrivacyPrinciple | PrivacyPrinciple[];
-  problema: string;
-  soluzione: string;
-  esempio: string;
-  cweWeakness?: CWEWeakness | CWEWeakness[];
+  id: number;
+  attributes: {
+    titolo: string;
+    descrizione: string;
+    contesto: string;
+    collocazione_MVC: string;
+    problema: string;
+    soluzione: string;
+    esempio: string;
+    fase_ISO_9241_210: string;
+    privacy_strategy: {
+      data: { id: number; attributes: { nome: string; descrizione: string } }[];
+    };
+    gdpr_article: {
+      data: {
+        id: number;
+        attributes: { nome: string; link: string; numero: number }[];
+      };
+    };
+    privacy_principle: {
+      data: {
+        id: number;
+        attributes: { titolo: string; descrizione: string };
+      };
+    };
+    cwe_weakness: {
+      data: {
+        id: number;
+        attributes: { nome: string; descrizione: string; numero: number };
+      };
+    };
+  };
 };
 
 export type PrivacyPrinciple = {
