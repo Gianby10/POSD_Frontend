@@ -103,3 +103,18 @@ export const formRegisterSchema = z.object({
     .string()
     .min(6, { message: "La password dev'essere almeno di 6 caratteri" }),
 });
+
+export const formAddPatternSchema = z.object({
+  titolo: z.string().min(1),
+  descrizione: z.string().min(1),
+  privacy_strategy: z.number().optional().array(),
+  contesto: z.string().min(1),
+  collocazione_MVC: z.string().min(1),
+  gdpr_article: z.number().optional().array(),
+  privacy_principle: z.number().optional().array(),
+  problema: z.string().min(1),
+  soluzione: z.string().min(1),
+  esempio: z.string().min(1),
+  cwe_weakness: z.number().optional().array(),
+  fase_ISO_9241_210: z.string().min(1),
+});

@@ -15,7 +15,6 @@ const PatternsPage = async (props: Props) => {
 
         <PatternsList />
       </MaxWidthWrapper>
-      ;
     </section>
   );
 };

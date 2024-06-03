@@ -3,13 +3,23 @@ import axios from "axios";
 import React from "react";
 import qs from "qs";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Info, Ribbon } from "lucide-react";
+import {
+  ArrowLeft,
+  ExternalLink,
+  Info,
+  Ribbon,
+  ThumbsDown,
+  ThumbsUp,
+} from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import AddFeedback from "../_components/AddFeedback";
+import { getUserMeLoader } from "@/lib/auth";
 type Props = {
   params: {
     patternId: string;
@@ -21,9 +31,34 @@ const query = qs.stringify(
   },
   { encode: false }
 );
+
+const getUserFeedback = async (patternId: string, userId: string) => {
+  if (!userId) {
+    return undefined;
+  }
+  const data = await axios.get(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/feedbacks?filters[privacy_pattern][$in]=${patternId}&filters[users_permissions_user][$in]=${userId}`
+  );
+  return data.data.data?.[0]?.attributes?.isLike;
+};
+
+const getLikes = async (patternId: string) => {
+  const data = await axios.get(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/feedbacks?filters[privacy_pattern][$in]=${patternId}&filters[isLike][$eq]=true`
+  );
+  return data.data.data.length;
+};
+
+const getDislikes = async (patternId: string) => {
+  const data = await axios.get(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/feedbacks?filters[privacy_pattern][$in]=${patternId}&filters[isLike][$eq]=false`
+  );
+  return data.data.data.length;
+};
+
 const PatternIdPage = async ({ params }: Props) => {
   const patternId = params.patternId;
-  const { data: pattern, status } = await axios.get(
+  const { data: pattern } = await axios.get(
     `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/privacy-patterns/${patternId}?${query}`
   );
   const patternData = {
@@ -41,8 +76,11 @@ const PatternIdPage = async ({ params }: Props) => {
     cweWeaknesses: pattern.data.attributes.cwe_weakness.data,
   };
 
-  console.log(patternData);
+  const user = await getUserMeLoader();
 
+  const feedbackLikes = await getLikes(patternId);
+  const feedbackDislikes = await getDislikes(patternId);
+  const userFeedback = await getUserFeedback(patternId, user?.data?.id);
   return (
     <section>
       <MaxWidthWrapper className="mt-10 p-4">
@@ -210,6 +248,13 @@ const PatternIdPage = async ({ params }: Props) => {
             </div>
           </div>
         </div>
+        <AddFeedback
+          userId={user?.data?.id}
+          likes={feedbackLikes}
+          dislikes={feedbackDislikes}
+          userFeedback={userFeedback}
+          patternId={patternId}
+        />
       </MaxWidthWrapper>
     </section>
   );

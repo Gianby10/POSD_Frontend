@@ -8,14 +8,16 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, Plus, UserRound } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth-actions";
+import { useRouter } from "next/navigation";
 
 type Props = {
   username: string;
 };
 
 const UserDropdown = ({ username }: Props) => {
+  const router = useRouter();
   return (
     <div>
       <DropdownMenu>
@@ -29,7 +31,16 @@ const UserDropdown = ({ username }: Props) => {
           <DropdownMenuLabel>Il mio profilo</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="text-red-600 "
+            className="cursor-pointer"
+            onClick={() => {
+              router.push("/patterns/add");
+            }}
+          >
+            <Plus className="h-3 w-3 mr-1" />
+            Suggerisci nuovo pattern
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-red-600 cursor-pointer"
             onClick={() => {
               logoutAction();
             }}
