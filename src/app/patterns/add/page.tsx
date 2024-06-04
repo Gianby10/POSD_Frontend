@@ -11,7 +11,10 @@ const getArticoli = async () => {
   const { data: articoli, status } = await axios.get(
     `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/gdpr-articles`
   );
-  return articoli.data;
+  return articoli.data.sort((a: any, b: any) => {
+    if (a.attributes.numero > b.attributes.numero) return 1;
+    return -1;
+  });
 };
 
 const getStrategies = async () => {
@@ -32,7 +35,20 @@ const getWeaknesses = async () => {
   const { data: weaknesses, status } = await axios.get(
     `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/cwe-weaknesses`
   );
-  return weaknesses.data;
+  return weaknesses.data.sort((a: any, b: any) => {
+    if (a.attributes.numero > b.attributes.numero) return 1;
+    return -1;
+  });
+};
+
+const getOwaspCategories = async () => {
+  const { data: owasp, status } = await axios.get(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/owasp-categories`
+  );
+  return owasp.data.sort((a: any, b: any) => {
+    if (a.attributes.numero > b.attributes.numero) return 1;
+    return -1;
+  });
 };
 
 const AddPatternPage = async (props: Props) => {
@@ -42,11 +58,13 @@ const AddPatternPage = async (props: Props) => {
   let strategies = [];
   let principles = [];
   let weaknesses = [];
+  let owaspCategories = [];
   try {
     articles = await getArticoli();
     strategies = await getStrategies();
     principles = await getPrinciples();
     weaknesses = await getWeaknesses();
+    owaspCategories = await getOwaspCategories();
   } catch (error) {
     redirect("/");
   }
@@ -70,6 +88,7 @@ const AddPatternPage = async (props: Props) => {
           strategies={strategies}
           principles={principles}
           weaknesses={weaknesses}
+          owaspCategories={owaspCategories}
         />
       </MaxWidthWrapper>
     </section>

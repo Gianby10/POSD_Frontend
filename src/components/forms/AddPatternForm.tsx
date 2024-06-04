@@ -25,6 +25,8 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { addPattern } from "@/lib/actions/pkb-actions";
 import { redirect } from "next/navigation";
+import AddArticle from "./AddPatternElement";
+import AddPatternElement from "./AddPatternElement";
 type Props = {
   articles: {
     id: number;
@@ -59,6 +61,15 @@ type Props = {
       descrizione: string;
     };
   }[];
+
+  owaspCategories: {
+    id: number;
+    attributes: {
+      nome: string;
+      numero: number;
+      descrizione: string;
+    };
+  }[];
 };
 
 const AddPatternForm = ({
@@ -66,6 +77,7 @@ const AddPatternForm = ({
   principles,
   strategies,
   weaknesses,
+  owaspCategories,
 }: Props) => {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
@@ -106,6 +118,7 @@ const AddPatternForm = ({
       esempio: "",
       cwe_weakness: [],
       fase_ISO_9241_210: "",
+      owasp_category: [],
     },
   });
   return (
@@ -148,7 +161,10 @@ const AddPatternForm = ({
           name="gdpr_article"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Articoli GDPR</FormLabel>
+              <div className="flex items-center gap-1">
+                <FormLabel>Articoli GDPR</FormLabel>
+                <AddPatternElement type="article" />
+              </div>
               {articles.map((article) => (
                 <FormField
                   key={article.id}
@@ -372,7 +388,10 @@ const AddPatternForm = ({
           name="cwe_weakness"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Vulnerabilità CWE</FormLabel>
+              <div className="flex items-center gap-1">
+                <FormLabel>Vulnerabilià CWE</FormLabel>
+                <AddPatternElement type="weakness" />
+              </div>
               {weaknesses.map((weakness) => (
                 <FormField
                   key={weakness.id}
@@ -401,6 +420,59 @@ const AddPatternForm = ({
                         <FormLabel className="font-normal">
                           CWE-{weakness.attributes.numero}:{" "}
                           {weakness.attributes.nome}
+                        </FormLabel>
+                      </FormItem>
+                    );
+                  }}
+                />
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          disabled={isPending}
+          control={form.control}
+          name="owasp_category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Categorie OWASP Associate</FormLabel>
+              {owaspCategories.map((owaspCategory) => (
+                <FormField
+                  key={owaspCategory.id}
+                  control={form.control}
+                  name="owasp_category"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={owaspCategory.id}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(owaspCategory.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([
+                                    ...field.value,
+                                    owaspCategory.id,
+                                  ])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== owaspCategory.id
+                                    )
+                                  );
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          A
+                          {owaspCategory.attributes.numero < 10
+                            ? "0" + owaspCategory.attributes.numero
+                            : owaspCategory.attributes.numero}
+                          : {owaspCategory.attributes.nome}:
+                          {owaspCategory.attributes.nome}
                         </FormLabel>
                       </FormItem>
                     );

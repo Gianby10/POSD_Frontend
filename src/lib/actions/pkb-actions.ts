@@ -2,7 +2,11 @@
 
 import { z } from "zod";
 import { getUserMeLoader } from "../auth";
-import { formAddPatternSchema } from "../types";
+import {
+  formAddArticleSchema,
+  formAddPatternSchema,
+  formAddWeaknessSchema,
+} from "../types";
 import axios from "axios";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
@@ -37,6 +41,7 @@ export const addPattern = async (
     privacy_strategy,
     problema,
     soluzione,
+    owasp_category,
   } = data;
 
   try {
@@ -56,6 +61,7 @@ export const addPattern = async (
           privacy_strategy,
           problema,
           soluzione,
+          owasp_category,
           publishedAt: null, // Pubblica in draft mode
         },
       },
@@ -214,4 +220,100 @@ export const removeLike = async (userId: number, patternId: string) => {
     };
   }
   revalidatePath("/patterns/" + patternId);
+};
+
+export const addArticle = async (
+  values: z.infer<typeof formAddArticleSchema>
+) => {
+  const user = await getUserMeLoader();
+  if (!user.ok) {
+    return {
+      error: "Utente non autenticato!",
+    };
+  }
+  const userToken = cookies().get("jwt")?.value;
+  console.log(userToken);
+  const { success, data } = formAddArticleSchema.safeParse(values);
+  if (!success) {
+    return {
+      error: "Controlla i dati inseriti e riprova!",
+    };
+  }
+  const { nome, numero, link } = data;
+
+  try {
+    const r = await axios.post(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/gdpr-articles`,
+      {
+        data: {
+          nome,
+          numero,
+          link,
+          publishedAt: null, // Pubblica in draft mode
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    return {
+      error: "Errore sconosciuto. Riprova tra qualche minuto!",
+    };
+  }
+
+  return {
+    success: true,
+  };
+};
+
+export const addWeakness = async (
+  values: z.infer<typeof formAddWeaknessSchema>
+) => {
+  const user = await getUserMeLoader();
+  if (!user.ok) {
+    return {
+      error: "Utente non autenticato!",
+    };
+  }
+  const userToken = cookies().get("jwt")?.value;
+  console.log(userToken);
+  const { success, data } = formAddWeaknessSchema.safeParse(values);
+  if (!success) {
+    return {
+      error: "Controlla i dati inseriti e riprova!",
+    };
+  }
+  const { nome, numero, descrizione } = data;
+
+  try {
+    const r = await axios.post(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_BASE_URL}/cwe-weaknesses`,
+      {
+        data: {
+          nome,
+          numero,
+          descrizione,
+          publishedAt: null, // Pubblica in draft mode
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    return {
+      error: "Errore sconosciuto. Riprova tra qualche minuto!",
+    };
+  }
+
+  return {
+    success: true,
+  };
 };

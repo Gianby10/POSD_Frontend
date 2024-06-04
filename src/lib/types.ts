@@ -116,5 +116,18 @@ export const formAddPatternSchema = z.object({
   soluzione: z.string().min(1),
   esempio: z.string().min(1),
   cwe_weakness: z.number().optional().array(),
+  owasp_category: z.number().optional().array(),
   fase_ISO_9241_210: z.string().min(1),
+});
+
+export const formAddArticleSchema = z.object({
+  numero: z.string(),
+  nome: z.string().min(1),
+  link: z.string().url(),
+});
+
+export const formAddWeaknessSchema = z.object({
+  numero: z.string(),
+  nome: z.string().min(1),
+  descrizione: z.string().min(1),
 });

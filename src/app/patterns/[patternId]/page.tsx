@@ -74,6 +74,7 @@ const PatternIdPage = async ({ params }: Props) => {
     gdprArticles: pattern.data.attributes.gdpr_article.data,
     privacyPrinciples: pattern.data.attributes.privacy_principle.data,
     cweWeaknesses: pattern.data.attributes.cwe_weakness.data,
+    owaspCategories: pattern.data.attributes.owasp_categories.data,
   };
 
   const user = await getUserMeLoader();
@@ -116,7 +117,7 @@ const PatternIdPage = async ({ params }: Props) => {
             <p>{patternData.example}</p>
           </div>
 
-          <div className="mt-10 lg:ml-12 justify-self-end">
+          <div className="lg:ml-12 justify-self-end">
             <h3 className="mt-6 text-3xl font-semibold">
               Articoli GDPR interessati
             </h3>
@@ -244,6 +245,46 @@ const PatternIdPage = async ({ params }: Props) => {
                 )
               ) : (
                 <div>Nessuna vulnerabilità CWE.</div>
+              )}
+            </div>
+
+            <h3 className="mt-6 text-3xl font-semibold">
+              Categorie OWASP Associate
+            </h3>
+            <div className="space-y-4">
+              {patternData.owaspCategories.length > 0 ? (
+                patternData.owaspCategories.map(
+                  (owaspCategory: {
+                    attributes: {
+                      nome: string;
+                      numero: number;
+                      descrizione: string;
+                    };
+                  }) => {
+                    return (
+                      <Accordion
+                        key={owaspCategory.attributes.nome}
+                        type="single"
+                        collapsible
+                      >
+                        <AccordionItem value="item-1">
+                          <AccordionTrigger>
+                            A
+                            {owaspCategory.attributes.numero < 10
+                              ? "0" + owaspCategory.attributes.numero
+                              : owaspCategory.attributes.numero}
+                            : {owaspCategory.attributes.nome}
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            {owaspCategory.attributes.descrizione}
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    );
+                  }
+                )
+              ) : (
+                <div>Nessuna categoria OWASP</div>
               )}
             </div>
           </div>
